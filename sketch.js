@@ -1,13 +1,4 @@
-function polarToCart(hTheta, vTheta, r) {
-  return createVector(
-    r * sin(vTheta) * cos(hTheta),
-    r * sin(vTheta) * sin(hTheta),
-    r * cos(vTheta)
-  );
-}
-
-let colors = [];
-
+let colors;
 const triColorArray = [];
 const hStep = 10;
 const vStep = 10;
@@ -32,31 +23,6 @@ function setup() {
       }
     }
   }
-
-  console.log(triColorArray);
-}
-
-function otherColor(a, b) {
-  return (((-a - b) % 3) + 3) % 3;
-}
-
-function colorH(x, y, colorArray) {
-  if (x === 0) return;
-
-  console.log(x, y);
-  colorArray[y][x].h =
-    (x + y) % 2 === 0
-      ? colorArray[y][x - 1].h
-      : otherColor(colorArray[y][x - 1].v, colorArray[y][x - 1].h);
-}
-
-function colorV(x, y, colorArray) {
-  if (y === 0) return;
-
-  colorArray[y][x].v =
-    (x + y) % 2 === 1
-      ? colorArray[y - 1][x].v
-      : otherColor(colorArray[y - 1][x].v, colorArray[y - 1][x].h);
 }
 
 function draw() {
@@ -82,6 +48,7 @@ function draw() {
       }
     }
   }
+
   x = (x + 1) % numCols;
   if (x == 0) ++y;
   if (y < numRows) {
@@ -90,11 +57,32 @@ function draw() {
   }
 }
 
-function keyPressed() {
-  if (key === "s") {
-    x = (x + 1) % (360 / hStep);
-    if (x == 0) ++y;
-    colorH(x, y, triColorArray);
-    colorV(x, y, triColorArray);
-  }
+function polarToCart(hTheta, vTheta, r) {
+  return createVector(
+    r * sin(vTheta) * cos(hTheta),
+    r * sin(vTheta) * sin(hTheta),
+    r * cos(vTheta)
+  );
+}
+
+function otherColor(a, b) {
+  return (((-a - b) % 3) + 3) % 3;
+}
+
+function colorH(x, y, colorArray) {
+  if (x === 0) return;
+
+  colorArray[y][x].h =
+    (x + y) % 2 === 0
+      ? colorArray[y][x - 1].h
+      : otherColor(colorArray[y][x - 1].v, colorArray[y][x - 1].h);
+}
+
+function colorV(x, y, colorArray) {
+  if (y === 0) return;
+
+  colorArray[y][x].v =
+    (x + y) % 2 === 1
+      ? colorArray[y - 1][x].v
+      : otherColor(colorArray[y - 1][x].v, colorArray[y - 1][x].h);
 }
